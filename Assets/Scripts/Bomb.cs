@@ -62,6 +62,7 @@ public class Bomb : MonoBehaviour
     // Called when bomb is caught in blast of another bomb
     public void Chain_Bang ()
     {
+        GameObject.Find("Bonus").GetComponent<Bonuses>().Chain_Bomb();
         bomb_timer = 0.1f;
         StartCoroutine(Wait_timer());
     }

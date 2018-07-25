@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Outside_Wall : MonoBehaviour {
+public class Outside_Wall : MonoBehaviour
+{
+    public bool triggered;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		
 	}
 	
@@ -19,7 +22,7 @@ public class Outside_Wall : MonoBehaviour {
     {
         if (other.gameObject.tag == "Player")
         {
-
+            triggered = true;
         }
     }
 }

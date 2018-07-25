@@ -61,6 +61,11 @@ public class Explosion : MonoBehaviour
                     wall.gameObject.GetComponent<Enemy_AI>().Die();
                 }
 
+                if (wall.gameObject.tag == "D_Wall")
+                {
+                    GameObject.Find("Bonus").GetComponent<Bonuses>().d_walls--;
+                }
+
                 Destroy(wall.gameObject);
             }
             else

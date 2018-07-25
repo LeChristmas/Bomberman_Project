@@ -49,5 +49,10 @@ public class Level_Exit : MonoBehaviour
                 triggered = true;
             }
         }
+
+        if (other.tag == "Bomb")
+        {
+            GameObject.Find("Bonus").GetComponent<Bonuses>().Bomb_Exit();
+        }
     }
 }

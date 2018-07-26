@@ -6,11 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
-    [Header("- Name Of The Scen To Transistion To -")]
+    [Header("- Names Of Scenes To Transistion To -")]
     public string main_scene_name;
+    public string menu_scene_name;
 
     [Header("- Array Of UI Elements -")]
     public GameObject[] ui_objects;
+    public GameObject[] saving_ui;
 
     [Header("- Controls UI -")]
     public GameObject[] controls_gameobject;
@@ -22,6 +24,10 @@ public class UI : MonoBehaviour
 
     [Header("- Stage Indicator Text variable -")]
     public Text stage_text;
+
+    [Header("- Saving Variables -")]
+    public Text score_text;
+    private string player_name;
 
     // Called On Frist Frame
     private void Start()
@@ -115,19 +121,31 @@ public class UI : MonoBehaviour
         // If Lives Are Gone Display Game Over Screen
         if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives == 0)
         {
+            Time.timeScale = 0.0f;
+
             for (int i = 0; i < ui_objects.Length; i++)
             {
                 if (i == 2)
                 {
                     ui_objects[i].SetActive(true);
+                    if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().saving_active)
+                    {
+                        saving_ui[0].SetActive(true);
+                        saving_ui[1].SetActive(false);
+
+                        score_text.text = "Score: " + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score;
+                    }
+                    else
+                    {
+                        saving_ui[1].SetActive(true);
+                        saving_ui[0].SetActive(false);
+                    }
                 }
                 else
                 {
                     ui_objects[i].SetActive(false);
                 }
             }
-
-            Time.timeScale = 0.0f;
         }
         else
         {
@@ -245,10 +263,11 @@ public class UI : MonoBehaviour
         SceneManager.LoadScene(main_scene_name);
     }
 
-    // Called Whe The Player Exits The Application
+    // Called Whe The Player Returns To The Application
     public void Quit ()
     {
-        Application.Quit();
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().current_scene = Scene.Menu;
+        SceneManager.LoadScene(menu_scene_name);
     }
 
     // Used To Count Down The Timer
@@ -310,5 +329,18 @@ public class UI : MonoBehaviour
         {
             Win();
         }
+    }
+
+    public void On_Value_Changed (InputField ipf)
+    {
+        player_name = ipf.text;
+    }
+
+    public void Continue_Button ()
+    {
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().Save_Data(player_name);
+
+        saving_ui[1].SetActive(true);
+        saving_ui[0].SetActive(false);
     }
 }

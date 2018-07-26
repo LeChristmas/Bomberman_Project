@@ -46,6 +46,7 @@ public class Data : MonoBehaviour
     public Text lives_text;
     public Text timer_text;
 
+    [Header("- Bonus Stage Variable -")]
     public Bonus_Stage bonus_stage;
     public int bonus_enemy_index = -1;
 
@@ -65,10 +66,23 @@ public class Data : MonoBehaviour
     // Flamepass - grants player immunity to explosions
     public bool player_flamepass;
 
-	// Use this for initialization
-	void Start ()
+    [Header("- Saving Variables -")]
+    public bool saving_active;
+
+    public string[] score_name_key;
+    public string[] score_name_value;
+
+    public string[] score_number_key;
+    public int[] score_number_value;
+
+    public string current_save_pointer_key;
+    public int current_save_pointer_value;
+
+    // Use this for initialization
+    void Start ()
     {
         DontDestroyOnLoad(this);
+        Set_Data();
     }
 	
 	// Update is called once per frame
@@ -76,7 +90,15 @@ public class Data : MonoBehaviour
     {
         if (current_scene == Scene.Menu)
         {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                Clear_Data();
+            }
 
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                Save_Data("cuckin");
+            }
         }
 
         if (current_scene == Scene.Game)
@@ -109,4 +131,52 @@ public class Data : MonoBehaviour
             lives_text.text = "Lives: " + lives;
         }
 	}
+
+    // Initally Setting The Data Into Place
+    void Set_Data ()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            score_name_value[current_save_pointer_value] = PlayerPrefs.GetString(score_name_key[i], "");
+            score_number_value[current_save_pointer_value] = PlayerPrefs.GetInt(score_number_key[i], 0);
+        }
+
+        current_save_pointer_value = PlayerPrefs.GetInt(current_save_pointer_key, 0);
+    }
+
+    // Used To Save The Players Score
+    public void Save_Data (string name)
+    {
+        score_name_value[current_save_pointer_value] = name;
+        score_number_value[current_save_pointer_value] = score;
+
+        for (int i = 0; i < 10; i++)
+        {
+            PlayerPrefs.SetString(score_name_key[i], score_name_value[i]);
+            PlayerPrefs.SetInt(score_number_key[i], score_number_value[i]);
+        }
+
+        if (current_save_pointer_value < 9)
+        {
+            current_save_pointer_value++;
+        }
+        else
+        {
+            current_save_pointer_value = 0;
+        }
+
+        PlayerPrefs.SetInt(current_save_pointer_key, current_save_pointer_value);
+    }
+
+    // Used To Erase All Data
+    void Clear_Data ()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            PlayerPrefs.SetString(score_name_key[i], "");
+            PlayerPrefs.SetInt(score_number_key[i], 0);
+        }
+
+        PlayerPrefs.SetInt(current_save_pointer_key, 0);
+    }
 }

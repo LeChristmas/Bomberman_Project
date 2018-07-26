@@ -4,20 +4,16 @@ using UnityEngine;
 
 public class Spawn_Data : MonoBehaviour
 {
-    public GameObject data;
+    [Header("- The Prefab That gets Spawned In -")]
+    public GameObject data_prefab;
 
     private GameObject find_data;
 	// Use this for initialization
 	void Start ()
     {
+        // Will Only Spawn In The Prefab If One Is Not Detected
         find_data = GameObject.FindGameObjectWithTag("data");
 
-        if (find_data == null) Instantiate(data, transform.position, transform.rotation);
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
+        if (find_data == null) Instantiate(data_prefab, transform.position, transform.rotation);
 	}
 }

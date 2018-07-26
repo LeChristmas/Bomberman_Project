@@ -125,3 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   number_of_enemies: 0
   enemies: []
+  total_number_of_enemies: 0
+  triggered: 0
+  bombed_enemy_prefab: {fileID: 1632051145873518, guid: 9bc1fcb26db72bc4cad9af22779ecff5,
+    type: 2}

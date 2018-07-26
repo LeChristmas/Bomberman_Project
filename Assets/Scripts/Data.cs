@@ -1,9 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+public enum Bonus_Stage { Off, A, B, C, D, E, F, G, H, I, J }
+
+public enum Scene { Menu, Game }
+
 public class Data : MonoBehaviour
 {
-    [Header("- level Spawn Stats")]
+    [Header("- Used To Tell Whether Game Is In The Menu Or The Game -")]
+    public Scene current_scene;
+
+    [Header("- level Spawn Stats -")]
     // Number Assigned To Each Level
     public int level_number;
     // Powerup Type In Each Level
@@ -39,6 +46,9 @@ public class Data : MonoBehaviour
     public Text lives_text;
     public Text timer_text;
 
+    public Bonus_Stage bonus_stage;
+    public int bonus_enemy_index = -1;
+
     [Header("- Powerups -")]
     // Bombs - increase max amount of bombs to be dropped at once
     public int max_bombs;
@@ -54,8 +64,6 @@ public class Data : MonoBehaviour
     public bool player_bombpass;
     // Flamepass - grants player immunity to explosions
     public bool player_flamepass;
-    // Mystery - grants player temporary immunity to explosions and enemies
-    public bool mystery;
 
 	// Use this for initialization
 	void Start ()
@@ -66,18 +74,39 @@ public class Data : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
-        if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
-        if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
+        if (current_scene == Scene.Menu)
+        {
 
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bomb_strength = bomb_strength;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().detonator = detonator;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().max_bombs = max_bombs;
+        }
 
-        GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
-        GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
+        if (current_scene == Scene.Game)
+        {
+            if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
+            if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
+            if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
 
-        score_text.text = "Score: " + score;
-        lives_text.text = "Lives: " + lives;
+            if (bonus_stage == Bonus_Stage.Off)
+            {
+                start_time = 201;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().mystery_timer = 5.0f;
+            }
+            else
+            {
+                start_time = 31;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().mystery_timer = 33.0f;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().Mystery_Powerup();
+            }
+
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().max_bombs = max_bombs;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bomb_strength = bomb_strength;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().speed_increase = speed_increase;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().detonator = detonator;
+
+            GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
+            GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
+
+            score_text.text = "Score: " + score;
+            lives_text.text = "Lives: " + lives;
+        }
 	}
 }

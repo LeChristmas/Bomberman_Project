@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Move_Camera : MonoBehaviour
 {
+    [Header("- The Transform Of The Camera -")]
     public Transform camera_point;
 
+    [Header("- Positions That The Camera Moves To -")]
     public Transform position_a;
     public Transform position_b;
 
+    [Header("- Which Position The Camera Is Currently In -")]
     public int position = 0;
 
 	// Use this for initialization

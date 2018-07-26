@@ -4,19 +4,36 @@ using UnityEngine;
 
 public class Player_Movement : MonoBehaviour
 {
+    [Header("- Array Of Direction Points Movement Uses")]
     public GameObject[] direction_point;
 
+    [Header("- Variables Used For Movement -")]
+    private float player_speed = 0.4f;
+    public bool walk_delay;
     public int direction;
     public bool blocked;
 
+    [Header("- Local Powerup Stats -")]
     public GameObject bomb_prefab;
     public int max_bombs;
     public int bomb_strength;
+    public bool speed_increase;
     public bool detonator;
+    public float mystery_timer = 5.0f;
+    private bool mystery;
+
+    [Header("- Bomb Variables -")]
     public float bomb_timer;
     public List<Bomb> bombs = new List<Bomb>();
 
+    [Header("Arrow That Shows Player's Direction -")]
     public GameObject arrow;
+
+    [Header("- variables used For Bonuses -")]
+    public bool moving;
+    public bool on_exit;
+    private int move_timer_cycle;
+    public bool bottle_bonus_complete;
 
     private Transform player_transform;
 
@@ -29,50 +46,35 @@ public class Player_Movement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (speed_increase)
+        {
+            player_speed = 0.2f;
+        }
+        else
+        {
+            player_speed = 0.4f;
+        }
+
         // Movement
 		//Up Movement
-        if (Input.GetKeyDown(KeyCode.W) && Time.timeScale != 0.0f)
+        if (Input.GetKey(KeyCode.W) && Time.timeScale != 0.0f)
         {
-            if(direction == 0)
-            {
-                Move();
-            }
-
-            direction = 0;
-            arrow.transform.rotation = Quaternion.Euler(90, 0, 0);
+            Pre_Move(0, 0);
         }
         //Right Movement
-        if (Input.GetKeyDown(KeyCode.D) && Time.timeScale != 0.0f)
+        if (Input.GetKey(KeyCode.D) && Time.timeScale != 0.0f)
         {
-            if (direction == 1)
-            {
-                Move();
-            }
-
-            direction = 1;
-            arrow.transform.rotation = Quaternion.Euler(90, 0, -90);
+            Pre_Move(1, -90);
         }
         //Down Movement
-        if (Input.GetKeyDown(KeyCode.S) && Time.timeScale != 0.0f)
+        if (Input.GetKey(KeyCode.S) && Time.timeScale != 0.0f)
         {
-            if (direction == 2)
-            {
-                Move();
-            }
-
-            direction = 2;
-            arrow.transform.rotation = Quaternion.Euler(90, 0, 180);
+            Pre_Move(2, 180);
         }
         //Left Movement
-        if (Input.GetKeyDown(KeyCode.A) && Time.timeScale != 0.0f)
+        if (Input.GetKey(KeyCode.A) && Time.timeScale != 0.0f)
         {
-            if (direction == 3)
-            {
-                Move();
-            }
-
-            direction = 3;
-            arrow.transform.rotation = Quaternion.Euler(90, 0, 90);
+            Pre_Move(3, 90);
         }
 
         // Detonator
@@ -84,52 +86,45 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
+        // Called When Movement Stops, For Bonuses
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.A) && Time.timeScale != 0.0f)
+        {
+            moving = false;
+            on_exit = false;
+            move_timer_cycle = 0;
+        }
+
         // Bomb Spawn
-        if (Input.GetKeyDown(KeyCode.Q) && !blocked && Time.timeScale != 0.0f
+        if (Input.GetKeyDown(KeyCode.Q) && Time.timeScale != 0.0f
             && bombs.Count < max_bombs)
         {
             GameObject bomb;
             Bomb bomb_script;
 
-            RaycastHit hit;
-            if (Physics.Linecast(gameObject.transform.position, direction_point[direction].transform.position, out hit))
-            {
-                blocked = true;
-            }
-            else
-            {
-                switch (direction)
-                {
-                    case 0:
-                        bomb = Instantiate(bomb_prefab, direction_point[direction].transform.position, direction_point[direction].transform.rotation) as GameObject;
-                        bomb_script = bomb.GetComponent<Bomb>();
-                        bomb_script.Bomb_Spawned(bomb_strength, bomb_timer, detonator);
-                        bombs.Add(bomb_script);
-                        break;
-
-                    case 1:
-                        bomb = Instantiate(bomb_prefab, direction_point[direction].transform.position, direction_point[direction].transform.rotation) as GameObject;
-                        bomb_script = bomb.GetComponent<Bomb>();
-                        bomb_script.Bomb_Spawned(bomb_strength, bomb_timer, detonator);
-                        bombs.Add(bomb_script);
-                        break;
-
-                    case 2:
-                        bomb = Instantiate(bomb_prefab, direction_point[direction].transform.position, direction_point[direction].transform.rotation) as GameObject;
-                        bomb_script = bomb.GetComponent<Bomb>();
-                        bomb_script.Bomb_Spawned(bomb_strength, bomb_timer, detonator);
-                        bombs.Add(bomb_script);
-                        break;
-
-                    case 3:
-                        bomb = Instantiate(bomb_prefab, direction_point[direction].transform.position, direction_point[direction].transform.rotation) as GameObject;
-                        bomb_script = bomb.GetComponent<Bomb>();
-                        bomb_script.Bomb_Spawned(bomb_strength, bomb_timer, detonator);
-                        bombs.Add(bomb_script);
-                        break;
-                }
-            }
+            bomb = Instantiate(bomb_prefab, transform.position, transform.rotation) as GameObject;
+            bomb_script = bomb.GetComponent<Bomb>();
+            bomb_script.Bomb_Spawned(bomb_strength, bomb_timer, detonator);
+            bombs.Add(bomb_script);
         }
+    }
+
+    void Pre_Move (int local_direction, float angle)
+    {
+        if (!moving && on_exit)
+        {
+            moving = true;
+            StartCoroutine(Bottle_Timer());
+        }
+
+        if (!walk_delay)
+        {
+            walk_delay = true;
+            direction = local_direction;
+            Move();
+            StartCoroutine(Walk_Delay());
+        }
+
+        arrow.transform.rotation = Quaternion.Euler(90, 0, angle);
     }
 
     void Move ()
@@ -181,9 +176,44 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
+    IEnumerator Walk_Delay ()
+    {
+        yield return new WaitForSeconds(player_speed);
+        walk_delay = false;
+    }
+
+    IEnumerator Bottle_Timer ()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        if(moving && move_timer_cycle < 3)
+        {
+            StartCoroutine(Bottle_Timer());
+            move_timer_cycle++;
+        }
+        else if (move_timer_cycle == 3)
+        {
+            bottle_bonus_complete = true;
+        }
+    }
+
+    public void Mystery_Powerup ()
+    {
+        mystery = true;
+        StartCoroutine(Mystery_Delay());
+    }
+
+    IEnumerator Mystery_Delay ()
+    {
+        yield return new WaitForSeconds(mystery_timer);
+        mystery = false;
+    }
+
     public void Die()
     {
-        Debug.Log("Player Dead");
-        GameObject.Find("Canvas").GetComponent<UI>().Death();
+        if (!mystery)
+        {
+            GameObject.Find("Canvas").GetComponent<UI>().Death(gameObject);
+        }
     }
 }

@@ -7,11 +7,14 @@ public enum enemy_intelligence { One, Two, Three }
 
 public class Enemy_AI : MonoBehaviour
 {
+    [Header("- Enemy Stats -")]
     public enemy_speed speed;
     public enemy_intelligence smarts;
 
+    [Header("- How Many Points The Enemy Is Worth -")]
     public int points;
 
+    [Header("- Whether The Enemy Can PassThrough Walls -")]
     public bool wall_pass;
 
     private float move_speed;
@@ -48,6 +51,7 @@ public class Enemy_AI : MonoBehaviour
         Move();
     }
 
+    // Enemy Movement
     void Move ()
     {
         if (smarts == enemy_intelligence.One)
@@ -95,29 +99,34 @@ public class Enemy_AI : MonoBehaviour
                 }
             }
         }
-        int use_direction = Random.Range(0, move_direction.Count);
 
-        if (move_direction[use_direction].name == "Up_Point")
+        if (move_direction.Count > 0)
         {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
-        }
+            int use_direction = Random.Range(0, move_direction.Count);
 
-        if (move_direction[use_direction].name == "Right_Point")
-        {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
-        }
+            if (move_direction[use_direction].name == "Up_Point")
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+            }
 
-        if (move_direction[use_direction].name == "Down_Point")
-        {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
-        }
+            if (move_direction[use_direction].name == "Right_Point")
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+            }
 
-        if (move_direction[use_direction].name == "Left_Point")
-        {
-            gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+            if (move_direction[use_direction].name == "Down_Point")
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+            }
+
+            if (move_direction[use_direction].name == "Left_Point")
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+            }
         }
     }
 
+    // Used To Find The Player In Relation To The Enemy
     void Player_Finder()
     {
         float up_distance = Vector3.Distance(directions[0].transform.position, player.transform.position);
@@ -189,7 +198,7 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position, out hit))
                 {
                     move_direction.Add(directions[1]);
                 }
@@ -200,7 +209,7 @@ public class Enemy_AI : MonoBehaviour
                         move_direction.Add(directions[1]);
                     }
                 }
-                if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position, out hit))
                 {
                     move_direction.Add(directions[3]);
                 }
@@ -212,16 +221,19 @@ public class Enemy_AI : MonoBehaviour
                     }
                 }
 
-                int use_direction = Random.Range(0, move_direction.Count);
-
-                if (move_direction[use_direction].name == "Right_Point")
+                if (move_direction.Count > 0)
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
-                }
+                    int use_direction = Random.Range(0, move_direction.Count);
 
-                if (move_direction[use_direction].name == "Left_Point")
-                {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    if (move_direction[use_direction].name == "Right_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    }
+
+                    if (move_direction[use_direction].name == "Left_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    }
                 }
             }
         }
@@ -240,7 +252,7 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position, out hit))
                 {
                     move_direction.Add(directions[0]);
                 }
@@ -251,7 +263,7 @@ public class Enemy_AI : MonoBehaviour
                         move_direction.Add(directions[0]);
                     }
                 }
-                if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position, out hit))
                 {
                     move_direction.Add(directions[2]);
                 }
@@ -263,16 +275,19 @@ public class Enemy_AI : MonoBehaviour
                     }
                 }
 
-                int use_direction = Random.Range(0, move_direction.Count);
-
-                if (move_direction[use_direction].name == "Up_Point")
+                if (move_direction.Count > 0)
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
-                }
+                    int use_direction = Random.Range(0, move_direction.Count);
 
-                if (move_direction[use_direction].name == "Down_Point")
-                {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    if (move_direction[use_direction].name == "Up_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                    }
+
+                    if (move_direction[use_direction].name == "Down_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    }
                 }
             }
         }
@@ -291,7 +306,7 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position, out hit))
                 {
                     move_direction.Add(directions[1]);
                 }
@@ -302,7 +317,7 @@ public class Enemy_AI : MonoBehaviour
                         move_direction.Add(directions[1]);
                     }
                 }
-                if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position, out hit))
                 {
                     move_direction.Add(directions[3]);
                 }
@@ -314,16 +329,19 @@ public class Enemy_AI : MonoBehaviour
                     }
                 }
 
-                int use_direction = Random.Range(0, move_direction.Count);
-
-                if (move_direction[use_direction].name == "Right_Point")
+                if (move_direction.Count > 0)
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
-                }
+                    int use_direction = Random.Range(0, move_direction.Count);
 
-                if (move_direction[use_direction].name == "Left_Point")
-                {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    if (move_direction[use_direction].name == "Right_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    }
+
+                    if (move_direction[use_direction].name == "Left_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    }
                 }
             }
         }
@@ -342,7 +360,7 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position, out hit))
                 {
                     move_direction.Add(directions[0]);
                 }
@@ -353,7 +371,7 @@ public class Enemy_AI : MonoBehaviour
                         move_direction.Add(directions[0]);
                     }
                 }
-                if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position))
+                if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position, out hit))
                 {
                     move_direction.Add(directions[2]);
                 }
@@ -365,16 +383,19 @@ public class Enemy_AI : MonoBehaviour
                     }
                 }
 
-                int use_direction = Random.Range(0, move_direction.Count);
-
-                if (move_direction[use_direction].name == "Up_Point")
+                if (move_direction.Count > 0)
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
-                }
+                    int use_direction = Random.Range(0, move_direction.Count);
 
-                if (move_direction[use_direction].name == "Down_Point")
-                {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    if (move_direction[use_direction].name == "Up_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                    }
+
+                    if (move_direction[use_direction].name == "Down_Point")
+                    {
+                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    }
                 }
             }
         }
@@ -395,7 +416,7 @@ public class Enemy_AI : MonoBehaviour
                     move_direction.Add(directions[0]);
                 }
             }
-            if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position))
+            if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position, out hit))
             {
                 move_direction.Add(directions[1]);
             }
@@ -407,16 +428,19 @@ public class Enemy_AI : MonoBehaviour
                 }
             }
 
-            int use_direction = Random.Range(0, move_direction.Count);
-
-            if (move_direction[use_direction].name == "Up_Point")
+            if (move_direction.Count > 0)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
-            }
+                int use_direction = Random.Range(0, move_direction.Count);
 
-            if (move_direction[use_direction].name == "Right_Point")
-            {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                if (move_direction[use_direction].name == "Up_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                }
+
+                if (move_direction[use_direction].name == "Right_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                }
             }
         }
 
@@ -435,7 +459,7 @@ public class Enemy_AI : MonoBehaviour
                     move_direction.Add(directions[1]);
                 }
             }
-            if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position))
+            if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position, out hit))
             {
                 move_direction.Add(directions[2]);
             }
@@ -447,16 +471,19 @@ public class Enemy_AI : MonoBehaviour
                 }
             }
 
-            int use_direction = Random.Range(0, move_direction.Count);
-
-            if (move_direction[use_direction].name == "Right_Point")
+            if (move_direction.Count > 0)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
-            }
+                int use_direction = Random.Range(0, move_direction.Count);
 
-            if (move_direction[use_direction].name == "Down_Point")
-            {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                if (move_direction[use_direction].name == "Right_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                }
+
+                if (move_direction[use_direction].name == "Down_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                }
             }
         }
 
@@ -475,7 +502,7 @@ public class Enemy_AI : MonoBehaviour
                     move_direction.Add(directions[2]);
                 }
             }
-            if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position))
+            if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position, out hit))
             {
                 move_direction.Add(directions[3]);
             }
@@ -487,16 +514,19 @@ public class Enemy_AI : MonoBehaviour
                 }
             }
 
-            int use_direction = Random.Range(0, move_direction.Count);
-
-            if (move_direction[use_direction].name == "Down_Point")
+            if (move_direction.Count > 0)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
-            }
+                int use_direction = Random.Range(0, move_direction.Count);
 
-            if (move_direction[use_direction].name == "left_Point")
-            {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                if (move_direction[use_direction].name == "Down_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                }
+
+                if (move_direction[use_direction].name == "left_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                }
             }
         }
 
@@ -515,7 +545,7 @@ public class Enemy_AI : MonoBehaviour
                     move_direction.Add(directions[3]);
                 }
             }
-            if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position))
+            if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position, out hit))
             {
                 move_direction.Add(directions[0]);
             }
@@ -527,34 +557,40 @@ public class Enemy_AI : MonoBehaviour
                 }
             }
 
-            int use_direction = Random.Range(0, move_direction.Count);
-
-            if (move_direction[use_direction].name == "Left_Point")
+            if (move_direction.Count > 0)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
-            }
+                int use_direction = Random.Range(0, move_direction.Count);
 
-            if (move_direction[use_direction].name == "Up_Point")
-            {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                if (move_direction[use_direction].name == "Left_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                }
+
+                if (move_direction[use_direction].name == "Up_Point")
+                {
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                }
             }
         }
     }
 
+    // Called When The Enemy Dies
     public void Die ()
     {
         Level_Exit lvl_exit = GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>();
         lvl_exit.number_of_enemies--;
 
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += points;
+
+        Destroy(gameObject);
     }
 
+    // Called To Kill the Player
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             other.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
-            Destroy(other.gameObject);
         }
     }
 

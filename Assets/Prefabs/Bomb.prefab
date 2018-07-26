@@ -553,7 +553,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0b648956639414fa1b5448b4d29212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bomb_body: {fileID: 4962601350234628}
   wall_colliders: []
+  other_colliders: []
+  distance: []
 --- !u!114 &114470589089712896
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -580,7 +583,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0b648956639414fa1b5448b4d29212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bomb_body: {fileID: 4962601350234628}
   wall_colliders: []
+  other_colliders: []
+  distance: []
 --- !u!114 &114698177380554256
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -592,7 +598,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0b648956639414fa1b5448b4d29212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bomb_body: {fileID: 4962601350234628}
   wall_colliders: []
+  other_colliders: []
+  distance: []
 --- !u!114 &114781990642388806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -604,7 +613,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0b648956639414fa1b5448b4d29212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bomb_body: {fileID: 4962601350234628}
   wall_colliders: []
+  other_colliders: []
+  distance: []
 --- !u!135 &135331635978280842
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -612,7 +624,7 @@ SphereCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1416771865453310}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5

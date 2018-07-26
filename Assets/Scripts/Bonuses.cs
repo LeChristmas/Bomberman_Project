@@ -6,14 +6,18 @@ public enum Bonus_Type { none, bonus_target, goddess_mask, cola_bottle, famicom,
 
 public class Bonuses : MonoBehaviour
 {
+    [Header("- Dropdown Of All Bonuses -")]
     public Bonus_Type bonus_type;
 
     private int level_number;
 
     private bool complete;
+    private bool started;
 
+    [Header("- Outside Path Used For Goddess Mask -")]
     public Outside_Wall[] outside_path;
 
+    [Header("- Amount Of Destrucible Walls -")]
     public int d_walls;
 
     private int bombs_chained;
@@ -27,8 +31,10 @@ public class Bonuses : MonoBehaviour
 	
     IEnumerator Initial_Wait ()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
         Select_Bonus();
+        yield return new WaitForSeconds(2.0f);
+        started = true;
     }
 
     void Select_Bonus ()
@@ -61,7 +67,7 @@ public class Bonuses : MonoBehaviour
 	void Update ()
     {
 		// Bonus Target
-        if (bonus_type == Bonus_Type.bonus_target && !complete)
+        if (bonus_type == Bonus_Type.bonus_target && !complete && started)
         {
             if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies
                 == GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().total_number_of_enemies
@@ -73,7 +79,7 @@ public class Bonuses : MonoBehaviour
         }
 
         // Goddess Mask
-        if (bonus_type == Bonus_Type.goddess_mask && !complete)
+        if (bonus_type == Bonus_Type.goddess_mask && !complete && started)
         {
             int passed = 0;
 
@@ -93,13 +99,17 @@ public class Bonuses : MonoBehaviour
         }
 
         // Cola Bottle
-        if (bonus_type == Bonus_Type.cola_bottle && !complete)
+        if (bonus_type == Bonus_Type.cola_bottle && !complete && started)
         {
-
+            if(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bottle_bonus_complete)
+            {
+                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 30000;
+                complete = true;
+            }
         }
 
         // Famicom
-        if (bonus_type == Bonus_Type.famicom && !complete)
+        if (bonus_type == Bonus_Type.famicom && !complete && started)
         {
             if(bombs_chained > 248)
             {
@@ -109,7 +119,7 @@ public class Bonuses : MonoBehaviour
         }
 
         // Nakamoto-san
-        if (bonus_type == Bonus_Type.nakamoto_san && !complete)
+        if (bonus_type == Bonus_Type.nakamoto_san && !complete && started)
         {
             if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0
                 && d_walls == GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().cubes_spawning)

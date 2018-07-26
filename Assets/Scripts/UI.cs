@@ -6,26 +6,34 @@ using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
-    public string scene_name;
+    [Header("- Name Of The Scen To Transistion To -")]
+    public string main_scene_name;
 
+    [Header("- Array Of UI Elements -")]
     public GameObject[] ui_objects;
 
+    [Header("- Controls UI -")]
+    public GameObject[] controls_gameobject;
+    private bool controls = true;
+
+    [Header("- Timer Variables -")]
     public int time;
     public Text timer_text;
 
-    public GameObject[] controls_gameobject;
-
+    [Header("- Stage Indicator Text variable -")]
     public Text stage_text;
 
-    private bool controls = true;
-
+    // Called On Frist Frame
     private void Start()
     {
+        Time.timeScale = 1.0f;
         StartCoroutine(Game_Timer());
     }
 
+    // Called Every Frame
     private void Update()
     {
+        // Turns Control UI On And Off
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             controls = !controls;
@@ -47,8 +55,10 @@ public class UI : MonoBehaviour
         }
     }
 
+    // Called When Game Is Paused
     public void Pause()
     {
+        // Switches UI To Pause
         for (int i = 0; i < ui_objects.Length; i++)
         {
             if(i == 1)
@@ -61,11 +71,14 @@ public class UI : MonoBehaviour
             }
         }
 
+        // Freezes Game
         Time.timeScale = 0.0f;
     }
 
+    // Called When Game Is Unpaused
     public void UnPause()
     {
+        // Switches UI To Game
         for (int i = 0; i < ui_objects.Length; i++)
         {
             if (i == 0)
@@ -78,13 +91,19 @@ public class UI : MonoBehaviour
             }
         }
 
+        // Sets game Time To Normal
         Time.timeScale = 1.0f;
     }
 
-    public void Death ()
+    // Called When The Player Dies
+    public void Death (GameObject player)
     {
+        Destroy(player);
+
+        // Reducts Life
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives--;
 
+        // Resets All Player's Powerup Stats To Default
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().max_bombs = 1;
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bomb_strength = 1;
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().speed_increase = false;
@@ -93,6 +112,7 @@ public class UI : MonoBehaviour
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_bombpass = false;
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_flamepass = false;
 
+        // If Lives Are Gone Display Game Over Screen
         if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives == 0)
         {
             for (int i = 0; i < ui_objects.Length; i++)
@@ -111,10 +131,11 @@ public class UI : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(scene_name);
+            SceneManager.LoadScene(main_scene_name);
         }
     }
 
+    // Called When The Player Complete The Stage
     public void Win ()
     {
         for (int i = 0; i < ui_objects.Length; i++)
@@ -132,31 +153,119 @@ public class UI : MonoBehaviour
         Time.timeScale = 0.0f;
     }
 
+    // Called When The Player Resets The Game
     public void Reset_Game ()
     {
+        // resets All Stats
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score = 0;
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives = 2;
         GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number = 0;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().max_bombs = 1;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bomb_strength = 1;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().speed_increase = false;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_wallpass = false;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().detonator = false;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_bombpass = false;
+        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_flamepass = false;
 
-        SceneManager.LoadScene(scene_name);
+        SceneManager.LoadScene(main_scene_name);
     }
 
+    // Called When The Players Moves On To The Next Level
     public void Next_Level ()
     {
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number++;
-        SceneManager.LoadScene(scene_name);
+        // Used To Determine If Next Level Is A Bonus Stage Or Not
+        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 4 
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.A;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 0;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 9
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.B;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 1;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 14
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.C;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 2;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 19
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.D;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 3;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 24
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.E;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 4;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 29
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.F;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 5;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 34
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.G;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 6;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 38
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.H;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 43
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.I;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
+        }
+        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 48
+            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.J;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
+        }
+        else
+        {
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.Off;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = -1;
+            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number++;
+        }
+
+        SceneManager.LoadScene(main_scene_name);
     }
 
+    // Called Whe The Player Exits The Application
     public void Quit ()
     {
         Application.Quit();
     }
 
+    // Used To Count Down The Timer
     IEnumerator Game_Timer ()
     {
         yield return new WaitForSeconds(0.1f);
 
-        stage_text.text = "Stage:" + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number + 1;
+        // Changes Beginning Screen Depending On If It Is A Bonus Stage Or Not
+        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            int lvl_number = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number + 1;
+            stage_text.text = "Stage:" + lvl_number;
+        }
+        else
+        {
+            stage_text.text = "Bonus:" + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage;
+        }
 
         for (int i = 0; i < ui_objects.Length; i++)
         {
@@ -192,6 +301,14 @@ public class UI : MonoBehaviour
             yield return new WaitForSeconds(1.0f);
         }
 
-        Death();
+        // Used To Decide What Happens When Timer Ends
+        if(GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().Time_Up();
+        }
+        else
+        {
+            Win();
+        }
     }
 }

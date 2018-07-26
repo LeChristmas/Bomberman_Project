@@ -68,6 +68,8 @@ MonoBehaviour:
   score_text: {fileID: 0}
   lives_text: {fileID: 0}
   timer_text: {fileID: 0}
+  bonus_stage: 0
+  bonus_enemy_index: -1
   max_bombs: 1
   bomb_strength: 1
   speed_increase: 0
@@ -75,4 +77,3 @@ MonoBehaviour:
   detonator: 0
   player_bombpass: 0
   player_flamepass: 0
-  mystery: 0

@@ -35,13 +35,16 @@ public class Wall_Spawner : MonoBehaviour
         StartCoroutine(Initial_Wait());
     }
 
+    // A Delay To Ensure Everything It Needs Is Spawned In
     IEnumerator Initial_Wait ()
     {
         yield return new WaitForSeconds(0.1f);
 
+        // Gets The Stage Number And Powerup Type For That Stage
         level_number = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number;
         power_up_type = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().powerup_types[level_number];
 
+        // Gets The Amount Of Each Enemy Type that Spwans In For The Particular Stage
         enemy_spawing_numbers[0] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().balloom_spawn_number[level_number];
         enemy_spawing_numbers[1] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().oneal_spawn_number[level_number];
         enemy_spawing_numbers[2] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().doll_spawn_number[level_number];
@@ -51,13 +54,26 @@ public class Wall_Spawner : MonoBehaviour
         enemy_spawing_numbers[6] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().pass_spawn_number[level_number];
         enemy_spawing_numbers[7] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().pontan_spawn_number[level_number];
 
-        Spawn_Level();
-    }
-
-    void Spawn_Level ()
-    {
+        // Assigns The Spawn Locations To A Temporary List For Use
         temp_all_spots = all_spots;
 
+        // Normal Spawning For Stages
+        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        {
+            Spawn_Cubes();
+            Spawn_Enemies();
+        }
+        // Spawning For Bonus Stages
+        else
+        {
+            Instantiate(exit_prefab, new Vector3(1000, 0, 0), transform.rotation);
+            StartCoroutine(Bonus_Stage_Spawn_Enemies());
+        }
+    }
+
+    // Cube Spawning
+    void Spawn_Cubes ()
+    {
         for (int i = 0; i < cubes_spawning; i++)
         {
             int current_number = Random.Range(0, temp_all_spots.Count);
@@ -66,6 +82,7 @@ public class Wall_Spawner : MonoBehaviour
             temp_all_spots.Remove(temp_all_spots[current_number]);
         }
 
+        // Selects Random Ints Within the Cube Spawn List To Spawn Items Under Cubes
         power_up_int = Random.Range(0, cube_spawning_spots.Count);
         exit_int = Random.Range(0, cube_spawning_spots.Count);
 
@@ -84,8 +101,11 @@ public class Wall_Spawner : MonoBehaviour
                 Instantiate(exit_prefab, new Vector3(cube_spawning_spots[i].transform.position.x, 0.001f, cube_spawning_spots[i].transform.position.z), cube_spawning_spots[i].transform.rotation);
             }
         }
+    }
 
-        // Enemy Spawning
+    // Enemy Spawning
+    void Spawn_Enemies ()
+    {
         for (int i = 0; i < enemy_prefabs.Length; i++)
         {
             for (int j = 0; j < enemy_spawing_numbers[i]; j++)
@@ -103,5 +123,38 @@ public class Wall_Spawner : MonoBehaviour
 
             enemy_spawning_spots.Clear();
         }
+    }
+
+    // Used To Spawn Enemies Every Second
+    IEnumerator Bonus_Stage_Spawn_Enemies ()
+    {
+        for (int i = 0; i < 31; i++)
+        {
+            int random_position = Random.Range(0, temp_all_spots.Count);
+
+            Instantiate(enemy_prefabs[GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index],
+                temp_all_spots[random_position].transform.position, temp_all_spots[random_position].transform.rotation);
+
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
+
+    // Spawns Five Pontan Enemies When Timer Reaches Zero
+    public void Time_Up ()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            int current_number = Random.Range(0, temp_all_spots.Count);
+
+            enemy_spawning_spots.Add(temp_all_spots[current_number]);
+            temp_all_spots.Remove(temp_all_spots[current_number]);
+        }
+
+        foreach (GameObject enemy in enemy_spawning_spots)
+        {
+            Instantiate(enemy_prefabs[7], enemy.transform.position, enemy.transform.rotation);
+        }
+
+        enemy_spawning_spots.Clear();
     }
 }

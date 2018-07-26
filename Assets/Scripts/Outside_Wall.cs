@@ -4,19 +4,8 @@ using UnityEngine;
 
 public class Outside_Wall : MonoBehaviour
 {
+    [Header("- Used For The Goddess Mask Bonus -")]
     public bool triggered;
-
-	// Use this for initialization
-	void Start ()
-    {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
 
     private void OnTriggerEnter(Collider other)
     {

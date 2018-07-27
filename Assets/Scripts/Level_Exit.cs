@@ -27,12 +27,6 @@ public class Level_Exit : MonoBehaviour
     public bool linecast_lock = false;
     public bool bomb_delay_bool = false;
 
-	// Use this for initialization
-	void Start ()
-    {
-        StartCoroutine(Initial_Wait());
-	}
-
     private void Update()
     {
         if (!Physics.Linecast(transform.position, linecast_target.position) && !linecast_lock)
@@ -42,10 +36,8 @@ public class Level_Exit : MonoBehaviour
         }
     }
 
-    IEnumerator Initial_Wait ()
+    public void Delay()
     {
-        yield return new WaitForSeconds(0.5f);
-
         temp_enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         foreach (GameObject enemy in temp_enemies)

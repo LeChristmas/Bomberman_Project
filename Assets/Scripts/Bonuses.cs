@@ -12,7 +12,7 @@ public class Bonuses : MonoBehaviour
     private int level_number;
 
     private bool complete;
-    private bool started;
+    public bool started;
 
     [Header("- Outside Path Used For Goddess Mask -")]
     public Outside_Wall[] outside_path;
@@ -37,7 +37,7 @@ public class Bonuses : MonoBehaviour
         started = true;
     }
 
-    void Select_Bonus ()
+    public void Select_Bonus ()
     {
         level_number = Data.game_data.level_number;
         bonus_type = Data.game_data.bonus_types[level_number];

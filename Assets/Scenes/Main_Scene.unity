@@ -4385,6 +4385,7 @@ MonoBehaviour:
   power_up_type: 0
   exit_prefab: {fileID: 1952623090407484, guid: 06225a55678fac74cbcceaa8df9a5949,
     type: 2}
+  exit: {fileID: 0}
   enemy_prefabs:
   - {fileID: 1828852050954336, guid: 691610a538284d3478487c1f6a7ae0fb, type: 2}
   - {fileID: 1632051145873518, guid: 9bc1fcb26db72bc4cad9af22779ecff5, type: 2}
@@ -8423,6 +8424,49 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 515281537}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &517859638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 517859640}
+  - component: {fileID: 517859639}
+  m_Layer: 0
+  m_Name: Initial_Delay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &517859639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 517859638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 773b87a7825a30f43b67f93b9c5b4fb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  local_bonuses: {fileID: 1353214298}
+  local_ui: {fileID: 1141634538}
+  local_wall_spawner: {fileID: 255310196}
+--- !u!4 &517859640
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 517859638}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -13.563058, y: 0.65609837, z: 5.1334558}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &524106145
 GameObject:
   m_ObjectHideFlags: 0
@@ -18846,6 +18890,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonus_type: 0
+  started: 0
   outside_path:
   - {fileID: 1939993451}
   - {fileID: 823895119}
@@ -19662,11 +19707,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4425588510604452, guid: 41a18ce18f5d1a1409c5e2962d1c201d, type: 2}
       propertyPath: m_RootOrder
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1966092304030306, guid: 41a18ce18f5d1a1409c5e2962d1c201d, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114749799932105118, guid: 41a18ce18f5d1a1409c5e2962d1c201d,
         type: 2}

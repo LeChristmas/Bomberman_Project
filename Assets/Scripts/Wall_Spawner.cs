@@ -20,6 +20,7 @@ public class Wall_Spawner : MonoBehaviour
 
     [Header("- Section For Exit Spawn Stats -")]
     public GameObject exit_prefab;
+    public Level_Exit exit;
     private int exit_int;
 
     [Header("- Section For Enemy Spawn Stats -")]
@@ -29,17 +30,9 @@ public class Wall_Spawner : MonoBehaviour
 
     private int level_number;
 
-    // Use this for initialization
-    void Start ()
-    {
-        StartCoroutine(Initial_Wait());
-    }
-
     // A Delay To Ensure Everything It Needs Is Spawned In
-    IEnumerator Initial_Wait ()
+    public void Delay ()
     {
-        yield return new WaitForSeconds(0.1f);
-
         // Gets The Stage Number And Powerup Type For That Stage
         level_number = Data.game_data.level_number;
         power_up_type = Data.game_data.powerup_types[level_number];
@@ -49,10 +42,10 @@ public class Wall_Spawner : MonoBehaviour
         enemy_spawing_numbers[1] = Data.game_data.oneal_spawn_number[level_number];
         enemy_spawing_numbers[2] = Data.game_data.doll_spawn_number[level_number];
         enemy_spawing_numbers[3] = Data.game_data.minvo_spawn_number[level_number];
-        enemy_spawing_numbers[4] = Data.game_data.GetComponent<Data>().kondoria_spawn_number[level_number];
-        enemy_spawing_numbers[5] = Data.game_data.GetComponent<Data>().ovapi_spawn_number[level_number];
-        enemy_spawing_numbers[6] = Data.game_data.GetComponent<Data>().pass_spawn_number[level_number];
-        enemy_spawing_numbers[7] = Data.game_data.GetComponent<Data>().pontan_spawn_number[level_number];
+        enemy_spawing_numbers[4] = Data.game_data.kondoria_spawn_number[level_number];
+        enemy_spawing_numbers[5] = Data.game_data.ovapi_spawn_number[level_number];
+        enemy_spawing_numbers[6] = Data.game_data.pass_spawn_number[level_number];
+        enemy_spawing_numbers[7] = Data.game_data.pontan_spawn_number[level_number];
 
         // Assigns The Spawn Locations To A Temporary List For Use
         temp_all_spots = all_spots;
@@ -98,7 +91,8 @@ public class Wall_Spawner : MonoBehaviour
 
             if (exit_int == i)
             {
-                Instantiate(exit_prefab, new Vector3(cube_spawning_spots[i].transform.position.x, 0.001f, cube_spawning_spots[i].transform.position.z), cube_spawning_spots[i].transform.rotation);
+                GameObject exit_go = Instantiate(exit_prefab, new Vector3(cube_spawning_spots[i].transform.position.x, 0.001f, cube_spawning_spots[i].transform.position.z), cube_spawning_spots[i].transform.rotation) as GameObject;
+                exit = exit_go.GetComponent<Level_Exit>();
             }
         }
     }

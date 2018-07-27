@@ -57,6 +57,9 @@ public class Data : MonoBehaviour
     public Bonus_Stage bonus_stage;
     public int bonus_enemy_index = -1;
 
+
+    private Player_Movement player_script;
+
     [Header("- Powerups -")]
     // Bombs - increase max amount of bombs to be dropped at once
     public int max_bombs;
@@ -93,7 +96,6 @@ public class Data : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
         Load_Data();
     }
 	
@@ -102,36 +104,46 @@ public class Data : MonoBehaviour
     {
         if (current_scene == Scene.Game)
         {
-            if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
-            if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
-            if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
-
-            Player_Movement player_script = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>();
-
-            if (bonus_stage == Bonus_Stage.Off)
+            if (player_script != null)
             {
-                start_time = 201;
-                player_script.mystery_timer = 5.0f;
+                player_script.max_bombs = max_bombs;
+                player_script.bomb_strength = bomb_strength;
+                player_script.speed_increase = speed_increase;
+                player_script.detonator = detonator;
             }
-            else
-            {
-                start_time = 31;
-                player_script.mystery_timer = 33.0f;
-                player_script.Mystery_Powerup();
-            }
-
-            player_script.max_bombs = max_bombs;
-            player_script.bomb_strength = bomb_strength;
-            player_script.speed_increase = speed_increase;
-            player_script.detonator = detonator;
-
-            GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
-            GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
-
-            score_text.text = "Score: " + score;
-            lives_text.text = "Lives: " + lives;
         }
 	}
+
+    public void Delay ()
+    {
+        if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
+        if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
+        if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
+
+        player_script = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>();
+
+        if (bonus_stage == Bonus_Stage.Off)
+        {
+            start_time = 201;
+            player_script.mystery_timer = 5.0f;
+        }
+        else
+        {
+            start_time = 31;
+            player_script.mystery_timer = 33.0f;
+            player_script.Mystery_Powerup();
+        }
+
+        GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
+        GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
+
+        score_text.text = "Score: " + score;
+        lives_text.text = "Lives: " + lives;
+    }
+
+
+
+    // Saving Functions
 
     // Initally Setting The Data Into Place
     public void Load_Data ()

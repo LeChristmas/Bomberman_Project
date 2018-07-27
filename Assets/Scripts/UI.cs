@@ -33,7 +33,6 @@ public class UI : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 1.0f;
-        StartCoroutine(Game_Timer());
     }
 
     // Called Every Frame
@@ -263,11 +262,8 @@ public class UI : MonoBehaviour
         SceneManager.LoadScene(menu_scene_name);
     }
 
-    // Used To Count Down The Timer
-    IEnumerator Game_Timer ()
+    public void Delay ()
     {
-        yield return new WaitForSeconds(0.1f);
-
         // Changes Beginning Screen Depending On If It Is A Bonus Stage Or Not
         if (Data.game_data.bonus_stage == Bonus_Stage.Off)
         {
@@ -291,7 +287,13 @@ public class UI : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1.0f);
+        StartCoroutine(Game_Timer());
+    }
+
+    // Used To Count Down The Timer
+    IEnumerator Game_Timer ()
+    {
+        yield return new WaitForSeconds(2.0f);
 
         for (int i = 0; i < ui_objects.Length; i++)
         {

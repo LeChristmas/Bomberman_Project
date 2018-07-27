@@ -9,6 +9,49 @@ public class Power_Up : MonoBehaviour
     [Header("- Dropdown Of All Powerup Types -")]
     public Power_Ups power_up_type;
 
+    [Header("- Displaying The Sprite -")]
+    public Sprite[] powerup_sprites;
+    public int sprite_index;
+    public SpriteRenderer sprite_renderer;
+
+    private void Start()
+    {
+        if (power_up_type == Power_Ups.Max_Bombs)
+        {
+            sprite_index = 0;
+        }
+        if (power_up_type == Power_Ups.Bomb_Range)
+        {
+            sprite_index = 1;
+        }
+        if (power_up_type == Power_Ups.Speed_Increase)
+        {
+            sprite_index = 2;
+        }
+        if (power_up_type == Power_Ups.Wallpass)
+        {
+            sprite_index = 3;
+        }
+        if (power_up_type == Power_Ups.Detonator)
+        {
+            sprite_index = 4;
+        }
+        if (power_up_type == Power_Ups.Bombpass)
+        {
+            sprite_index = 5;
+        }
+        if (power_up_type == Power_Ups.Flamepass)
+        {
+            sprite_index = 6;
+        }
+        if (power_up_type == Power_Ups.Mystery)
+        {
+            sprite_index = 7;
+        }
+
+        sprite_renderer.sprite = powerup_sprites[sprite_index];
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")

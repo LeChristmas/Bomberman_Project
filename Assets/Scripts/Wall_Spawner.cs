@@ -123,7 +123,7 @@ public class Wall_Spawner : MonoBehaviour
     }
 
     // Spawning The Bonus Items
-    public void Spawn_Bonus_Item (int points)
+    public void Spawn_Bonus_Item (int points, int sprite_index)
     {
         int random_number = Random.Range(0, all_spots.Count);
 
@@ -133,6 +133,7 @@ public class Wall_Spawner : MonoBehaviour
             {
                 GameObject bonus_item_go = Instantiate(bonus_item_prefab, all_spots[i].transform.position, all_spots[i].transform.rotation) as GameObject;
                 bonus_item_go.GetComponent<Bonus_Pickup>().points = points;
+                bonus_item_go.GetComponent<Bonus_Pickup>().sprite_index = sprite_index;
             }
         }
     }

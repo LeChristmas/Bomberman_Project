@@ -68,7 +68,7 @@ public class Bonuses : MonoBehaviour
         {
             if (level_exit.number_of_enemies == level_exit.total_number_of_enemies && level_exit.triggered)
             {
-                wall_spawner.Spawn_Bonus_Item(10000);
+                wall_spawner.Spawn_Bonus_Item(10000, 0);
                 complete = true;
             }
         }
@@ -88,7 +88,7 @@ public class Bonuses : MonoBehaviour
 
             if (passed >= outside_path.Length && level_exit.number_of_enemies == 0)
             {
-                wall_spawner.Spawn_Bonus_Item(20000);
+                wall_spawner.Spawn_Bonus_Item(20000, 1);
                 complete = true;
             }
         }
@@ -99,7 +99,7 @@ public class Bonuses : MonoBehaviour
         {
             if(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bottle_bonus_complete)
             {
-                wall_spawner.Spawn_Bonus_Item(30000);
+                wall_spawner.Spawn_Bonus_Item(30000, 2);
                 complete = true;
             }
         }
@@ -109,7 +109,7 @@ public class Bonuses : MonoBehaviour
         {
             if(bombs_chained > 248)
             {
-                wall_spawner.Spawn_Bonus_Item(500000);
+                wall_spawner.Spawn_Bonus_Item(500000, 3);
                 complete = true;
             }
         }
@@ -120,7 +120,7 @@ public class Bonuses : MonoBehaviour
             if (level_exit.number_of_enemies == 0
                 && d_walls == wall_spawner.cubes_spawning)
             {
-                wall_spawner.Spawn_Bonus_Item(1000000);
+                wall_spawner.Spawn_Bonus_Item(1000000, 4);
                 complete = true;
             }
         }
@@ -131,7 +131,7 @@ public class Bonuses : MonoBehaviour
         {
             if (exit_bombed >= 3)
             {
-                wall_spawner.Spawn_Bonus_Item(20000000);
+                wall_spawner.Spawn_Bonus_Item(20000000, 5);
                 complete = true;
             }
         }

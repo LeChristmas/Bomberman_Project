@@ -116,8 +116,6 @@ public class Data : MonoBehaviour
 
     public void Delay ()
     {
-        if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
-        if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
         if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
 
         player_script = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>();
@@ -136,9 +134,6 @@ public class Data : MonoBehaviour
 
         GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
         GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
-
-        score_text.text = "Score: " + score;
-        lives_text.text = "Lives: " + lives;
     }
 
 

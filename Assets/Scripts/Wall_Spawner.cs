@@ -23,6 +23,9 @@ public class Wall_Spawner : MonoBehaviour
     public Level_Exit exit;
     private int exit_int;
 
+    [Header("- Section For Bonus Item Spawn Stats -")]
+    public GameObject bonus_item_prefab;
+
     [Header("- Section For Enemy Spawn Stats -")]
     public GameObject[] enemy_prefabs;
     public int[] enemy_spawing_numbers;
@@ -116,6 +119,21 @@ public class Wall_Spawner : MonoBehaviour
             }
 
             enemy_spawning_spots.Clear();
+        }
+    }
+
+    // Spawning The Bonus Items
+    public void Spawn_Bonus_Item (int points)
+    {
+        int random_number = Random.Range(0, all_spots.Count);
+
+        for (int i = 0; i < all_spots.Count; i++)
+        {
+            if (random_number == i)
+            {
+                GameObject bonus_item_go = Instantiate(bonus_item_prefab, all_spots[i].transform.position, all_spots[i].transform.rotation) as GameObject;
+                bonus_item_go.GetComponent<Bonus_Pickup>().points = points;
+            }
         }
     }
 

@@ -7,7 +7,7 @@ public class Start_Delay : MonoBehaviour
     [Header("- All the Scripts In The Level That Need A Delay To Work -")]
     private Data local_data;
     public Bonuses local_bonuses;
-    private Level_Exit local_level_exit;
+    public Level_Exit local_level_exit;
     public UI local_ui;
     public Wall_Spawner local_wall_spawner;
 
@@ -23,7 +23,7 @@ public class Start_Delay : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         local_wall_spawner.Delay();
         local_data.Delay();
-        local_bonuses.Select_Bonus();
+        local_bonuses.Select_Bonus(local_level_exit, local_wall_spawner);
 
         yield return new WaitForSeconds(0.1f);
         local_level_exit = local_wall_spawner.exit;

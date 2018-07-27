@@ -11,8 +11,10 @@ public class Bonuses : MonoBehaviour
 
     private int level_number;
 
-    private bool complete;
+    [Header("- Whether The Bonuses Ar Obtainible -")]
     public bool started;
+    private bool complete;
+
 
     [Header("- Outside Path Used For Goddess Mask -")]
     public Outside_Wall[] outside_path;
@@ -20,43 +22,38 @@ public class Bonuses : MonoBehaviour
     [Header("- Amount Of Destrucible Walls -")]
     public int d_walls;
 
+    public Level_Exit level_exit;
+    public Wall_Spawner wall_spawner;
+
+    // Bomb Realted variables
     private int bombs_chained;
     private int exit_bombed;
 
-	// Use this for initialization
-	void Start ()
+    // Selects The Bonus For The Stage Dependant On What Data Says It Is Meant To Be
+    public void Select_Bonus (Level_Exit exit, Wall_Spawner w_spawner)
     {
-        StartCoroutine(Initial_Wait());
-	}
-	
-    IEnumerator Initial_Wait ()
-    {
-        yield return new WaitForSeconds(0.2f);
-        Select_Bonus();
-        yield return new WaitForSeconds(2.0f);
-        started = true;
-    }
+        level_exit = GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>();
+        wall_spawner = w_spawner;
 
-    public void Select_Bonus ()
-    {
         level_number = Data.game_data.level_number;
         bonus_type = Data.game_data.bonus_types[level_number];
 
-        d_walls = GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().cubes_spawning;
+        d_walls = wall_spawner.cubes_spawning;
     }
 
+    // Called When A Bomb Is Chained/ For Famicom Bonus
     public void Chain_Bomb ()
     {
-        if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0)
+        if (level_exit.number_of_enemies == 0)
         {
             bombs_chained++;
         }
     }
 
+    // Called When The Exit Is Bombed
     public void Bomb_Exit ()
     {
-        if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies 
-            == GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().total_number_of_enemies
+        if (level_exit.number_of_enemies == level_exit.total_number_of_enemies
             && d_walls == 0)
         {
             exit_bombed++;
@@ -66,19 +63,17 @@ public class Bonuses : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		// Bonus Target
+        // Bonus Target - Reveal the exit and pass over it without killing a single enemy
         if (bonus_type == Bonus_Type.bonus_target && !complete && started)
         {
-            if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies
-                == GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().total_number_of_enemies
-                && GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().triggered)
+            if (level_exit.number_of_enemies == level_exit.total_number_of_enemies && level_exit.triggered)
             {
+                wall_spawner.Spawn_Bonus_Item(10000);
                 complete = true;
-                Data.game_data.score += 10000;
             }
         }
 
-        // Goddess Mask
+        // Goddess Mask - After killing every single enemy, walk all the way around the outer circle of the stage
         if (bonus_type == Bonus_Type.goddess_mask && !complete && started)
         {
             int passed = 0;
@@ -91,50 +86,52 @@ public class Bonuses : MonoBehaviour
                 }
             }
 
-            if (passed == outside_path.Length && GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0)
+            if (passed >= outside_path.Length && level_exit.number_of_enemies == 0)
             {
-                Data.game_data.score += 20000;
+                wall_spawner.Spawn_Bonus_Item(20000);
                 complete = true;
             }
         }
 
-        // Cola Bottle
+        // Cola Bottle - Before killing all the enemies, reveal and walk over the exit, and continue to press the movement
+        // in that same direction for a short period of time
         if (bonus_type == Bonus_Type.cola_bottle && !complete && started)
         {
             if(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bottle_bonus_complete)
             {
-                Data.game_data.score += 30000;
+                wall_spawner.Spawn_Bonus_Item(30000);
                 complete = true;
             }
         }
 
-        // Famicom
+        // Famicom - After destroying every enemy, detonate over 248 bombs with chain reactions
         if (bonus_type == Bonus_Type.famicom && !complete && started)
         {
             if(bombs_chained > 248)
             {
-                Data.game_data.score += 500000;
+                wall_spawner.Spawn_Bonus_Item(500000);
                 complete = true;
             }
         }
 
-        // Nakamoto-san
+        // Nakamoto-san - Destroy all enemies without breaking a single wall, a nearly impossible task
         if (bonus_type == Bonus_Type.nakamoto_san && !complete && started)
         {
-            if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0
-                && d_walls == GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().cubes_spawning)
+            if (level_exit.number_of_enemies == 0
+                && d_walls == wall_spawner.cubes_spawning)
             {
-                Data.game_data.score += 10000000;
+                wall_spawner.Spawn_Bonus_Item(1000000);
                 complete = true;
             }
         }
 
-        // Dezeniman-san
+        // Dezeniman-san - Without destroying a single enemy, destroy every single wall on the stage and 
+        // detonate a bomb on the exit three times while not killing the spawned enemies from the exit
         if (bonus_type == Bonus_Type.dezeniman_san && !complete)
         {
             if (exit_bombed >= 3)
             {
-                Data.game_data.score += 20000000;
+                wall_spawner.Spawn_Bonus_Item(20000000);
                 complete = true;
             }
         }

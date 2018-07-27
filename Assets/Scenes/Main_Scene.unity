@@ -4386,6 +4386,8 @@ MonoBehaviour:
   exit_prefab: {fileID: 1952623090407484, guid: 06225a55678fac74cbcceaa8df9a5949,
     type: 2}
   exit: {fileID: 0}
+  bonus_item_prefab: {fileID: 1405037880607738, guid: e882cf52c08517c4ab4bcc8dc53ce319,
+    type: 2}
   enemy_prefabs:
   - {fileID: 1828852050954336, guid: 691610a538284d3478487c1f6a7ae0fb, type: 2}
   - {fileID: 1632051145873518, guid: 9bc1fcb26db72bc4cad9af22779ecff5, type: 2}
@@ -8452,6 +8454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   local_bonuses: {fileID: 1353214298}
+  local_level_exit: {fileID: 0}
   local_ui: {fileID: 1141634538}
   local_wall_spawner: {fileID: 255310196}
 --- !u!4 &517859640
@@ -16127,8 +16130,10 @@ MonoBehaviour:
   - {fileID: 1146154198}
   time: 0
   timer_text: {fileID: 0}
+  score_text: {fileID: 715323486}
+  lives_text: {fileID: 1636250941}
   stage_text: {fileID: 1561126944}
-  score_text: {fileID: 0}
+  saving_score_text: {fileID: 1366536006}
 --- !u!1 &1144210601
 GameObject:
   m_ObjectHideFlags: 0
@@ -18969,6 +18974,8 @@ MonoBehaviour:
   - {fileID: 851153392}
   - {fileID: 1821592108}
   d_walls: 0
+  level_exit: {fileID: 0}
+  wall_spawner: {fileID: 0}
 --- !u!1 &1358121732
 GameObject:
   m_ObjectHideFlags: 0

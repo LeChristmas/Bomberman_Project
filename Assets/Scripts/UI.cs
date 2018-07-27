@@ -22,11 +22,15 @@ public class UI : MonoBehaviour
     public int time;
     public Text timer_text;
 
+    [Header("- Score And Live Variables -")]
+    public Text score_text;
+    public Text lives_text;
+
     [Header("- Stage Indicator Text variable -")]
     public Text stage_text;
 
     [Header("- Saving Variables -")]
-    public Text score_text;
+    public Text saving_score_text;
     private string player_name;
 
     // Called On Frist Frame
@@ -38,6 +42,10 @@ public class UI : MonoBehaviour
     // Called Every Frame
     private void Update()
     {
+        // Updates The Score And Lives Text
+        score_text.text = "Score: " + Data.game_data.score;
+        lives_text.text = "Lives: " + Data.game_data.lives;
+
         // Turns Control UI On And Off
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -132,7 +140,7 @@ public class UI : MonoBehaviour
                         saving_ui[0].SetActive(true);
                         saving_ui[1].SetActive(false);
 
-                        score_text.text = "Score: " + Data.game_data.score;
+                        saving_score_text.text = "Score: " + Data.game_data.score;
                     }
                     else
                     {
@@ -243,6 +251,12 @@ public class UI : MonoBehaviour
             {
                 Data.game_data.bonus_stage = Bonus_Stage.J;
                 Data.game_data.bonus_enemy_index = 7;
+            }
+            else
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.Off;
+                Data.game_data.bonus_enemy_index = -1;
+                Data.game_data.level_number++;
             }
         }
         else

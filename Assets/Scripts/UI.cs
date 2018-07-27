@@ -107,19 +107,19 @@ public class UI : MonoBehaviour
         Destroy(player);
 
         // Reducts Life
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives--;
+        Data.game_data.lives--;
 
         // Resets All Player's Powerup Stats To Default
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().max_bombs = 1;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bomb_strength = 1;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().speed_increase = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_wallpass = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().detonator = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_bombpass = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_flamepass = false;
+        Data.game_data.max_bombs = 1;
+        Data.game_data.bomb_strength = 1;
+        Data.game_data.speed_increase = false;
+        Data.game_data.player_wallpass = false;
+        Data.game_data.detonator = false;
+        Data.game_data.player_bombpass = false;
+        Data.game_data.player_flamepass = false;
 
         // If Lives Are Gone Display Game Over Screen
-        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives == 0)
+        if (Data.game_data.lives == 0)
         {
             Time.timeScale = 0.0f;
 
@@ -128,12 +128,12 @@ public class UI : MonoBehaviour
                 if (i == 2)
                 {
                     ui_objects[i].SetActive(true);
-                    if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().saving_active)
+                    if (Data.game_data.saving_active)
                     {
                         saving_ui[0].SetActive(true);
                         saving_ui[1].SetActive(false);
 
-                        score_text.text = "Score: " + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score;
+                        score_text.text = "Score: " + Data.game_data.score;
                     }
                     else
                     {
@@ -175,16 +175,16 @@ public class UI : MonoBehaviour
     public void Reset_Game ()
     {
         // resets All Stats
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score = 0;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().lives = 2;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number = 0;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().max_bombs = 1;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bomb_strength = 1;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().speed_increase = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_wallpass = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().detonator = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_bombpass = false;
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_flamepass = false;
+        Data.game_data.score = 0;
+        Data.game_data.lives = 2;
+        Data.game_data.level_number = 0;
+        Data.game_data.max_bombs = 1;
+        Data.game_data.bomb_strength = 1;
+        Data.game_data.speed_increase = false;
+        Data.game_data.player_wallpass = false;
+        Data.game_data.detonator = false;
+        Data.game_data.player_bombpass = false;
+        Data.game_data.player_flamepass = false;
 
         SceneManager.LoadScene(main_scene_name);
     }
@@ -193,71 +193,64 @@ public class UI : MonoBehaviour
     public void Next_Level ()
     {
         // Used To Determine If Next Level Is A Bonus Stage Or Not
-        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 4 
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        if (Data.game_data.bonus_stage == Bonus_Stage.Off)
         {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.A;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 0;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 9
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.B;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 1;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 14
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.C;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 2;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 19
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.D;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 3;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 24
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.E;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 4;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 29
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.F;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 5;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 34
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.G;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 6;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 38
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.H;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 43
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.I;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
-        }
-        else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number == 48
-            && GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
-        {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.J;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = 7;
+            if (Data.game_data.level_number == 4)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.A;
+                Data.game_data.bonus_enemy_index = 0;
+            }
+            else if (Data.game_data.level_number == 9)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.B;
+                Data.game_data.bonus_enemy_index = 1;
+            }
+            else if (Data.game_data.level_number == 14)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.C;
+                Data.game_data.bonus_enemy_index = 2;
+            }
+            else if (Data.game_data.level_number == 19)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.D;
+                Data.game_data.bonus_enemy_index = 3;
+            }
+            else if (Data.game_data.level_number == 24)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.E;
+                Data.game_data.bonus_enemy_index = 4;
+            }
+            else if (Data.game_data.level_number == 29)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.F;
+                Data.game_data.bonus_enemy_index = 5;
+            }
+            else if (Data.game_data.level_number == 34)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.G;
+                Data.game_data.bonus_enemy_index = 6;
+            }
+            else if (Data.game_data.level_number == 38)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.H;
+                Data.game_data.bonus_enemy_index = 7;
+            }
+            else if (Data.game_data.level_number == 43)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.I;
+                Data.game_data.bonus_enemy_index = 7;
+            }
+            else if (Data.game_data.level_number == 48)
+            {
+                Data.game_data.bonus_stage = Bonus_Stage.J;
+                Data.game_data.bonus_enemy_index = 7;
+            }
         }
         else
         {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage = Bonus_Stage.Off;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index = -1;
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number++;
+            Data.game_data.bonus_stage = Bonus_Stage.Off;
+            Data.game_data.bonus_enemy_index = -1;
+            Data.game_data.level_number++;
         }
 
         SceneManager.LoadScene(main_scene_name);
@@ -266,7 +259,7 @@ public class UI : MonoBehaviour
     // Called Whe The Player Returns To The Application
     public void Quit ()
     {
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().current_scene = Scene.Menu;
+        Data.game_data.current_scene = Scene.Menu;
         SceneManager.LoadScene(menu_scene_name);
     }
 
@@ -276,14 +269,14 @@ public class UI : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         // Changes Beginning Screen Depending On If It Is A Bonus Stage Or Not
-        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        if (Data.game_data.bonus_stage == Bonus_Stage.Off)
         {
-            int lvl_number = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number + 1;
+            int lvl_number = Data.game_data.level_number + 1;
             stage_text.text = "Stage:" + lvl_number;
         }
         else
         {
-            stage_text.text = "Bonus:" + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage;
+            stage_text.text = "Bonus:" + Data.game_data.bonus_stage;
         }
 
         for (int i = 0; i < ui_objects.Length; i++)
@@ -321,7 +314,7 @@ public class UI : MonoBehaviour
         }
 
         // Used To Decide What Happens When Timer Ends
-        if(GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        if(Data.game_data.bonus_stage == Bonus_Stage.Off)
         {
             GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().Time_Up();
         }
@@ -338,7 +331,7 @@ public class UI : MonoBehaviour
 
     public void Continue_Button ()
     {
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().Save_Data(player_name);
+        Data.game_data.Save_Data(player_name);
 
         saving_ui[1].SetActive(true);
         saving_ui[0].SetActive(false);

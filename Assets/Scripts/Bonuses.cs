@@ -39,8 +39,8 @@ public class Bonuses : MonoBehaviour
 
     void Select_Bonus ()
     {
-        level_number = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number;
-        bonus_type = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_types[level_number];
+        level_number = Data.game_data.level_number;
+        bonus_type = Data.game_data.bonus_types[level_number];
 
         d_walls = GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().cubes_spawning;
     }
@@ -74,7 +74,7 @@ public class Bonuses : MonoBehaviour
                 && GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().triggered)
             {
                 complete = true;
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 10000;
+                Data.game_data.score += 10000;
             }
         }
 
@@ -93,7 +93,7 @@ public class Bonuses : MonoBehaviour
 
             if (passed == outside_path.Length && GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0)
             {
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 20000;
+                Data.game_data.score += 20000;
                 complete = true;
             }
         }
@@ -103,7 +103,7 @@ public class Bonuses : MonoBehaviour
         {
             if(GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bottle_bonus_complete)
             {
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 30000;
+                Data.game_data.score += 30000;
                 complete = true;
             }
         }
@@ -113,7 +113,7 @@ public class Bonuses : MonoBehaviour
         {
             if(bombs_chained > 248)
             {
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 500000;
+                Data.game_data.score += 500000;
                 complete = true;
             }
         }
@@ -124,7 +124,7 @@ public class Bonuses : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>().number_of_enemies == 0
                 && d_walls == GameObject.Find("Wall_Spawns").GetComponent<Wall_Spawner>().cubes_spawning)
             {
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 10000000;
+                Data.game_data.score += 10000000;
                 complete = true;
             }
         }
@@ -134,7 +134,7 @@ public class Bonuses : MonoBehaviour
         {
             if (exit_bombed >= 3)
             {
-                GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += 20000000;
+                Data.game_data.score += 20000000;
                 complete = true;
             }
         }

@@ -8,7 +8,11 @@ public class Player_Movement : MonoBehaviour
     public GameObject[] direction_point;
 
     [Header("- Variables Used For Movement -")]
-    private float player_speed = 0.4f;
+    public float x_step_distacne = 1.0f;
+    public float z_step_distacne = 1.0f;
+    public float player_speed = 0.4f;
+    public float increased_player_speed = 0.2f;
+    private float used_speed;
     public bool walk_delay;
     public int direction;
     public bool blocked;
@@ -48,33 +52,33 @@ public class Player_Movement : MonoBehaviour
     {
         if (speed_increase)
         {
-            player_speed = 0.2f;
+            used_speed = increased_player_speed;
         }
         else
         {
-            player_speed = 0.4f;
+            used_speed = player_speed;
         }
 
         // Movement
 		//Up Movement
         if (Input.GetKey(KeyCode.W) && Time.timeScale != 0.0f)
         {
-            Pre_Move(0, 0);
+            Pre_Move(0, 0, 0, z_step_distacne);
         }
         //Right Movement
         if (Input.GetKey(KeyCode.D) && Time.timeScale != 0.0f)
         {
-            Pre_Move(1, -90);
+            Pre_Move(1, -90, x_step_distacne, 0);
         }
         //Down Movement
         if (Input.GetKey(KeyCode.S) && Time.timeScale != 0.0f)
         {
-            Pre_Move(2, 180);
+            Pre_Move(2, 180, 0, -z_step_distacne);
         }
         //Left Movement
         if (Input.GetKey(KeyCode.A) && Time.timeScale != 0.0f)
         {
-            Pre_Move(3, 90);
+            Pre_Move(3, 90, -x_step_distacne, 0);
         }
 
         // Detonator
@@ -108,7 +112,7 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    void Pre_Move (int local_direction, float angle)
+    void Pre_Move (int local_direction, float angle, float x_move, float z_move)
     {
         if (!moving && on_exit)
         {
@@ -120,24 +124,24 @@ public class Player_Movement : MonoBehaviour
         {
             walk_delay = true;
             direction = local_direction;
-            Move();
+            Move(x_move, z_move);
             StartCoroutine(Walk_Delay());
         }
 
         arrow.transform.rotation = Quaternion.Euler(90, 0, angle);
     }
 
-    void Move ()
+    void Move (float x_move, float z_move)
     {
         RaycastHit hit;
         if (Physics.Linecast(gameObject.transform.position, direction_point[direction].transform.position, out hit))
         {
-            if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_wallpass
+            if (Data.game_data.player_wallpass
                 && hit.transform.tag == "D_Wall")
             {
                 blocked = false;
             }
-            else if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_bombpass
+            else if (Data.game_data.player_bombpass
                 && hit.transform.tag == "Bomb")
             {
                 blocked = false;
@@ -154,31 +158,13 @@ public class Player_Movement : MonoBehaviour
 
         if (!blocked)
         {
-            // Moves player One place in specified direction
-            switch (direction)
-            {
-                case 0:
-                    player_transform.position = new Vector3(player_transform.position.x, player_transform.position.y, player_transform.position.z + 1);
-                    break;
-
-                case 1:
-                    player_transform.position = new Vector3(player_transform.position.x + 1, player_transform.position.y, player_transform.position.z);
-                    break;
-
-                case 2:
-                    player_transform.position = new Vector3(player_transform.position.x, player_transform.position.y, player_transform.position.z - 1);
-                    break;
-
-                case 3:
-                    player_transform.position = new Vector3(player_transform.position.x - 1, player_transform.position.y, player_transform.position.z);
-                    break;
-            }
+            player_transform.position = new Vector3(player_transform.position.x + x_move, player_transform.position.y, player_transform.position.z + z_move);
         }
     }
 
     IEnumerator Walk_Delay ()
     {
-        yield return new WaitForSeconds(player_speed);
+        yield return new WaitForSeconds(used_speed);
         walk_delay = false;
     }
 

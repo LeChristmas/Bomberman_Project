@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public enum Bonus_Stage { Off, A, B, C, D, E, F, G, H, I, J }
 
@@ -7,6 +11,9 @@ public enum Scene { Menu, Game }
 
 public class Data : MonoBehaviour
 {
+    // Static Reference for other scripts
+    public static Data game_data;
+
     [Header("- Used To Tell Whether Game Is In The Menu Or The Game -")]
     public Scene current_scene;
 
@@ -69,60 +76,54 @@ public class Data : MonoBehaviour
     [Header("- Saving Variables -")]
     public bool saving_active;
 
-    public string[] score_name_key;
-    public string[] score_name_value;
+    public int save_pointer;
 
-    public string[] score_number_key;
-    public int[] score_number_value;
+    public string[] score_name;
+    public int[] score_number;
 
-    public string current_save_pointer_key;
-    public int current_save_pointer_value;
-
-    // Use this for initialization
-    void Start ()
+    // Used To Create Data Singleton
+    void Awake ()
     {
-        DontDestroyOnLoad(this);
-        Set_Data();
+        if (game_data == null)
+        {
+            DontDestroyOnLoad(this);
+            game_data = this;
+        }
+        else if (game_data != this)
+        {
+            Destroy(gameObject);
+        }
+
+        Load_Data();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (current_scene == Scene.Menu)
-        {
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                Clear_Data();
-            }
-
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                Save_Data("cuckin");
-            }
-        }
-
         if (current_scene == Scene.Game)
         {
             if (score_text == null) score_text = GameObject.Find("Score_Text").GetComponent<Text>();
             if (lives_text == null) lives_text = GameObject.Find("Lives_Text").GetComponent<Text>();
             if (timer_text == null) timer_text = GameObject.Find("Timer_Text").GetComponent<Text>();
 
+            Player_Movement player_script = GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>();
+
             if (bonus_stage == Bonus_Stage.Off)
             {
                 start_time = 201;
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().mystery_timer = 5.0f;
+                player_script.mystery_timer = 5.0f;
             }
             else
             {
                 start_time = 31;
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().mystery_timer = 33.0f;
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().Mystery_Powerup();
+                player_script.mystery_timer = 33.0f;
+                player_script.Mystery_Powerup();
             }
 
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().max_bombs = max_bombs;
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().bomb_strength = bomb_strength;
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().speed_increase = speed_increase;
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player_Movement>().detonator = detonator;
+            player_script.max_bombs = max_bombs;
+            player_script.bomb_strength = bomb_strength;
+            player_script.speed_increase = speed_increase;
+            player_script.detonator = detonator;
 
             GameObject.Find("Canvas").GetComponent<UI>().time = start_time;
             GameObject.Find("Canvas").GetComponent<UI>().timer_text = timer_text;
@@ -133,50 +134,82 @@ public class Data : MonoBehaviour
 	}
 
     // Initally Setting The Data Into Place
-    void Set_Data ()
+    public void Load_Data ()
     {
-        for (int i = 0; i < 10; i++)
+        // Loading From File
+        if (File.Exists(Application.persistentDataPath + "/Score_Data.dat"))
         {
-            score_name_value[current_save_pointer_value] = PlayerPrefs.GetString(score_name_key[i], "");
-            score_number_value[current_save_pointer_value] = PlayerPrefs.GetInt(score_number_key[i], 0);
-        }
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/Score_Data.dat", FileMode.Open);
+            Score_Data score_data = (Score_Data)bf.Deserialize(file);
+            file.Close();
 
-        current_save_pointer_value = PlayerPrefs.GetInt(current_save_pointer_key, 0);
+            save_pointer = score_data.save_pointer;
+
+            score_name = score_data.score_name;
+            score_number = score_data.score_number;
+        }
+        else
+        {
+            save_pointer = 0;
+        }
     }
 
     // Used To Save The Players Score
     public void Save_Data (string name)
     {
-        score_name_value[current_save_pointer_value] = name;
-        score_number_value[current_save_pointer_value] = score;
+        score_name[save_pointer] = name;
+        score_number[save_pointer] = score;
 
-        for (int i = 0; i < 10; i++)
+        if (save_pointer > 8)
         {
-            PlayerPrefs.SetString(score_name_key[i], score_name_value[i]);
-            PlayerPrefs.SetInt(score_number_key[i], score_number_value[i]);
-        }
-
-        if (current_save_pointer_value < 9)
-        {
-            current_save_pointer_value++;
+            save_pointer = 0;
         }
         else
         {
-            current_save_pointer_value = 0;
+            save_pointer++;
         }
 
-        PlayerPrefs.SetInt(current_save_pointer_key, current_save_pointer_value);
+        // Saving To File
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/Score_Data.dat");
+        Score_Data score_data = new Score_Data();
+
+        score_data.save_pointer = save_pointer;
+
+        score_data.score_name = score_name;
+        score_data.score_number = score_number;
+
+
+        bf.Serialize(file, score_data);
+        file.Close();
     }
 
     // Used To Erase All Data
-    void Clear_Data ()
+    public void Clear_Data ()
     {
-        for (int i = 0; i < 10; i++)
+        // Clears All Infomation In File
+        if (File.Exists(Application.persistentDataPath + "/Score_Data.dat"))
         {
-            PlayerPrefs.SetString(score_name_key[i], "");
-            PlayerPrefs.SetInt(score_number_key[i], 0);
-        }
+            File.Delete(Application.persistentDataPath + "/Score_Data.dat");
 
-        PlayerPrefs.SetInt(current_save_pointer_key, 0);
+            save_pointer = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                score_name[i] = "";
+                score_number[i] = 0;
+            }
+        }
     }
+}
+
+
+[Serializable]
+class Score_Data
+{
+    public int save_pointer;
+
+    public string[] score_name;
+    public int[] score_number;
 }

@@ -41,24 +41,24 @@ public class Wall_Spawner : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
 
         // Gets The Stage Number And Powerup Type For That Stage
-        level_number = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().level_number;
-        power_up_type = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().powerup_types[level_number];
+        level_number = Data.game_data.level_number;
+        power_up_type = Data.game_data.powerup_types[level_number];
 
         // Gets The Amount Of Each Enemy Type that Spwans In For The Particular Stage
-        enemy_spawing_numbers[0] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().balloom_spawn_number[level_number];
-        enemy_spawing_numbers[1] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().oneal_spawn_number[level_number];
-        enemy_spawing_numbers[2] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().doll_spawn_number[level_number];
-        enemy_spawing_numbers[3] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().minvo_spawn_number[level_number];
-        enemy_spawing_numbers[4] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().kondoria_spawn_number[level_number];
-        enemy_spawing_numbers[5] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().ovapi_spawn_number[level_number];
-        enemy_spawing_numbers[6] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().pass_spawn_number[level_number];
-        enemy_spawing_numbers[7] = GameObject.FindGameObjectWithTag("data").GetComponent<Data>().pontan_spawn_number[level_number];
+        enemy_spawing_numbers[0] = Data.game_data.balloom_spawn_number[level_number];
+        enemy_spawing_numbers[1] = Data.game_data.oneal_spawn_number[level_number];
+        enemy_spawing_numbers[2] = Data.game_data.doll_spawn_number[level_number];
+        enemy_spawing_numbers[3] = Data.game_data.minvo_spawn_number[level_number];
+        enemy_spawing_numbers[4] = Data.game_data.GetComponent<Data>().kondoria_spawn_number[level_number];
+        enemy_spawing_numbers[5] = Data.game_data.GetComponent<Data>().ovapi_spawn_number[level_number];
+        enemy_spawing_numbers[6] = Data.game_data.GetComponent<Data>().pass_spawn_number[level_number];
+        enemy_spawing_numbers[7] = Data.game_data.GetComponent<Data>().pontan_spawn_number[level_number];
 
         // Assigns The Spawn Locations To A Temporary List For Use
         temp_all_spots = all_spots;
 
         // Normal Spawning For Stages
-        if (GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_stage == Bonus_Stage.Off)
+        if (Data.game_data.bonus_stage == Bonus_Stage.Off)
         {
             Spawn_Cubes();
             Spawn_Enemies();
@@ -132,7 +132,7 @@ public class Wall_Spawner : MonoBehaviour
         {
             int random_position = Random.Range(0, temp_all_spots.Count);
 
-            Instantiate(enemy_prefabs[GameObject.FindGameObjectWithTag("data").GetComponent<Data>().bonus_enemy_index],
+            Instantiate(enemy_prefabs[Data.game_data.bonus_enemy_index],
                 temp_all_spots[random_position].transform.position, temp_all_spots[random_position].transform.rotation);
 
             yield return new WaitForSeconds(1.0f);

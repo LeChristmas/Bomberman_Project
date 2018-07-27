@@ -38,7 +38,7 @@ public class Explosion : MonoBehaviour
 
         if (!other_colliders.Contains(other) && !disabled)
         {
-            if (other.tag == "Player" && !GameObject.FindGameObjectWithTag("data").GetComponent<Data>().player_flamepass)
+            if (other.tag == "Player" && !Data.game_data.player_flamepass)
             {
                 other_colliders.Add(other);
             }

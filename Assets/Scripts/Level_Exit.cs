@@ -22,11 +22,25 @@ public class Level_Exit : MonoBehaviour
     [Header("- The Prefab For The Enemy That Spawns When Exit Is Bombed -")]
     public GameObject bombed_enemy_prefab;
 
+    // Used To Make Sure Enemies Don't Sapwn As Soon As The Exit Is Revealed
+    public Transform linecast_target;
+    public bool linecast_lock = false;
+    public bool bomb_delay_bool = false;
+
 	// Use this for initialization
 	void Start ()
     {
         StartCoroutine(Initial_Wait());
 	}
+
+    private void Update()
+    {
+        if (!Physics.Linecast(transform.position, linecast_target.position) && !linecast_lock)
+        {
+            linecast_lock = true;
+            StartCoroutine(Bomb_Exit_Delay());
+        }
+    }
 
     IEnumerator Initial_Wait ()
     {
@@ -62,17 +76,28 @@ public class Level_Exit : MonoBehaviour
         }
     }
 
+    IEnumerator Bomb_Exit_Delay ()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        bomb_delay_bool = true;
+    }
+
     // Called When The Exit Is Hit By A Bomb
     public void Exit_Bombed()
     {
-        GameObject.Find("Bonus").GetComponent<Bonuses>().Bomb_Exit();
-
-        for (int i = 0; i < 3; i++)
+        if (bomb_delay_bool)
         {
-            GameObject spwaned_enemy = Instantiate(bombed_enemy_prefab, new Vector3(transform.position.x, 1, transform.position.z), transform.rotation) as GameObject;
-            enemies.Add(spwaned_enemy);
-            total_number_of_enemies++;
-            number_of_enemies++;
+
+            GameObject.Find("Bonus").GetComponent<Bonuses>().Bomb_Exit();
+
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject spwaned_enemy = Instantiate(bombed_enemy_prefab, new Vector3(transform.position.x, 1, transform.position.z), transform.rotation) as GameObject;
+                enemies.Add(spwaned_enemy);
+                total_number_of_enemies++;
+                number_of_enemies++;
+            }
         }
     }
 }

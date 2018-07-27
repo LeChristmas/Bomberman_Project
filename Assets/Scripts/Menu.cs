@@ -21,7 +21,7 @@ public class Menu : MonoBehaviour
     {
         if (levelname != null)
         {
-            GameObject.FindGameObjectWithTag("data").GetComponent<Data>().current_scene = Scene.Game;
+            Data.game_data.current_scene = Scene.Game;
             SceneManager.LoadScene(levelname);
         }
     }
@@ -41,6 +41,7 @@ public class Menu : MonoBehaviour
             }
         }
 
+        Data.game_data.Load_Data();
         Display_Scores();
     }
 
@@ -80,14 +81,31 @@ public class Menu : MonoBehaviour
 
         for (int i = 0; i < 10; i++)
         {
-            Vector3 new_position = new Vector3(ui_start_point.transform.position.x, start_y_position, ui_start_point.transform.position.z);
+            if (Data.game_data.score_name[i] != "" || Data.game_data.score_number[i] != 0)
+            {
+                Vector3 new_position = new Vector3(ui_start_point.transform.position.x, start_y_position, ui_start_point.transform.position.z);
 
-            GameObject save_object = Instantiate(save_ui_prefab, new_position, ui_start_point.transform.rotation, gameObject.transform) as GameObject;
+                GameObject save_object = Instantiate(save_ui_prefab, new_position, ui_start_point.transform.rotation, gameObject.transform) as GameObject;
 
-            Text save_text = save_object.GetComponent<Text>();
-            save_text.text = i + ". Name: " + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score_name_value[i] + " Score: " + GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score_number_value[i];
+                Text save_text = save_object.GetComponent<Text>();
+                save_text.text = (i + 1) + ". Name: " + Data.game_data.score_name[i] + " Score: " + Data.game_data.score_number[i];
 
-            start_y_position -= 50.0f;
+                start_y_position -= 50.0f;
+            }
         }
+    }
+
+    public void Clear_Saves ()
+    {
+        GameObject[] saves = GameObject.FindGameObjectsWithTag("Save_Text");
+
+        foreach (GameObject local_save in saves)
+        {
+            Destroy(local_save);
+        }
+
+        Data.game_data.Clear_Data();
+
+        Display_Scores();
     }
 }

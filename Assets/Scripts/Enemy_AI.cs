@@ -17,6 +17,10 @@ public class Enemy_AI : MonoBehaviour
     [Header("- Whether The Enemy Can PassThrough Walls -")]
     public bool wall_pass;
 
+    [Header("- How Many Spaces The Enemy Moves In One Go In Unity Units -")]
+    public float x_move = 1.0f;
+    public float z_move = 1.0f;
+
     private float move_speed;
 
     public List<GameObject> directions = new List<GameObject>();
@@ -25,14 +29,14 @@ public class Enemy_AI : MonoBehaviour
     private GameObject player;
     private int player_direction;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         // Player
         player = GameObject.FindGameObjectWithTag("Player");
 
         // Setting Speed
-	    if (speed == enemy_speed.One)
+        if (speed == enemy_speed.One)
         {
             move_speed = 2;
         }
@@ -52,7 +56,7 @@ public class Enemy_AI : MonoBehaviour
     }
 
     // Enemy Movement
-    void Move ()
+    void Move()
     {
         if (smarts == enemy_intelligence.One)
         {
@@ -82,7 +86,7 @@ public class Enemy_AI : MonoBehaviour
         StartCoroutine(Wait_Timer());
     }
 
-    void Random_Movement ()
+    void Random_Movement()
     {
         foreach (GameObject direction in directions)
         {
@@ -93,7 +97,7 @@ public class Enemy_AI : MonoBehaviour
             }
             else
             {
-                if(hit.transform.gameObject.tag == "D_Wall" && wall_pass)
+                if (hit.transform.gameObject.tag == "D_Wall" && wall_pass)
                 {
                     move_direction.Add(direction);
                 }
@@ -106,22 +110,22 @@ public class Enemy_AI : MonoBehaviour
 
             if (move_direction[use_direction].name == "Up_Point")
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                Enemy_Move(x_move * 0, z_move);
             }
 
             if (move_direction[use_direction].name == "Right_Point")
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(x_move, z_move * 0);
             }
 
             if (move_direction[use_direction].name == "Down_Point")
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                Enemy_Move(x_move * 0, -z_move);
             }
 
             if (move_direction[use_direction].name == "Left_Point")
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(-x_move, z_move * 0);
             }
         }
     }
@@ -179,7 +183,7 @@ public class Enemy_AI : MonoBehaviour
         }
     }
 
-    void Follow_Player ()
+    void Follow_Player()
     {
         Player_Finder();
 
@@ -190,11 +194,11 @@ public class Enemy_AI : MonoBehaviour
 
             if (!Physics.Linecast(gameObject.transform.position, directions[0].transform.position, out hit))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                Enemy_Move(x_move * 0, z_move);
             }
             else if (hit.transform.gameObject.tag == "D_Wall" && wall_pass)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                Enemy_Move(x_move * 0, z_move);
             }
             else
             {
@@ -227,12 +231,12 @@ public class Enemy_AI : MonoBehaviour
 
                     if (move_direction[use_direction].name == "Right_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                        Enemy_Move(x_move, z_move * 0);
                     }
 
                     if (move_direction[use_direction].name == "Left_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                        Enemy_Move(-x_move, z_move * 0);
                     }
                 }
             }
@@ -244,11 +248,11 @@ public class Enemy_AI : MonoBehaviour
 
             if (!Physics.Linecast(gameObject.transform.position, directions[1].transform.position, out hit))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(x_move, z_move * 0);
             }
             else if (hit.transform.gameObject.tag == "D_Wall" && wall_pass)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(x_move, z_move * 0);
             }
             else
             {
@@ -281,12 +285,12 @@ public class Enemy_AI : MonoBehaviour
 
                     if (move_direction[use_direction].name == "Up_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                        Enemy_Move(x_move * 0, z_move);
                     }
 
                     if (move_direction[use_direction].name == "Down_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                        Enemy_Move(x_move * 0, -z_move);
                     }
                 }
             }
@@ -298,11 +302,11 @@ public class Enemy_AI : MonoBehaviour
 
             if (!Physics.Linecast(gameObject.transform.position, directions[2].transform.position, out hit))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                Enemy_Move(x_move * 0, -z_move);
             }
             else if (hit.transform.gameObject.tag == "D_Wall" && wall_pass)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                Enemy_Move(x_move * 0, -z_move);
             }
             else
             {
@@ -335,12 +339,12 @@ public class Enemy_AI : MonoBehaviour
 
                     if (move_direction[use_direction].name == "Right_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                        Enemy_Move(x_move, z_move * 0);
                     }
 
                     if (move_direction[use_direction].name == "Left_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                        Enemy_Move(-x_move, z_move * 0);
                     }
                 }
             }
@@ -352,11 +356,11 @@ public class Enemy_AI : MonoBehaviour
 
             if (!Physics.Linecast(gameObject.transform.position, directions[3].transform.position, out hit))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(-x_move, z_move * 0);
             }
             else if (hit.transform.gameObject.tag == "D_Wall" && wall_pass)
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                Enemy_Move(-x_move, z_move * 0);
             }
             else
             {
@@ -389,12 +393,12 @@ public class Enemy_AI : MonoBehaviour
 
                     if (move_direction[use_direction].name == "Up_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                        Enemy_Move(x_move * 0, z_move);
                     }
 
                     if (move_direction[use_direction].name == "Down_Point")
                     {
-                        gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                        Enemy_Move(x_move * 0, -z_move);
                     }
                 }
             }
@@ -434,12 +438,12 @@ public class Enemy_AI : MonoBehaviour
 
                 if (move_direction[use_direction].name == "Up_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                    Enemy_Move(x_move * 0, z_move);
                 }
 
                 if (move_direction[use_direction].name == "Right_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    Enemy_Move(x_move, z_move * 0);
                 }
             }
         }
@@ -477,12 +481,12 @@ public class Enemy_AI : MonoBehaviour
 
                 if (move_direction[use_direction].name == "Right_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x + 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    Enemy_Move(x_move, z_move * 0);
                 }
 
                 if (move_direction[use_direction].name == "Down_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    Enemy_Move(x_move * 0, -z_move);
                 }
             }
         }
@@ -520,12 +524,12 @@ public class Enemy_AI : MonoBehaviour
 
                 if (move_direction[use_direction].name == "Down_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z - 1);
+                    Enemy_Move(x_move * 0, -z_move);
                 }
 
                 if (move_direction[use_direction].name == "left_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    Enemy_Move(-x_move, z_move * 0);
                 }
             }
         }
@@ -563,15 +567,20 @@ public class Enemy_AI : MonoBehaviour
 
                 if (move_direction[use_direction].name == "Left_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x - 1, gameObject.transform.position.y, gameObject.transform.position.z);
+                    Enemy_Move(-x_move, z_move * 0);
                 }
 
                 if (move_direction[use_direction].name == "Up_Point")
                 {
-                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z + 1);
+                    Enemy_Move(x_move * 0, z_move);
                 }
             }
         }
+    }
+
+    void Enemy_Move(float x_move, float z_move)
+    {
+        gameObject.transform.position = new Vector3(gameObject.transform.position.x + x_move, gameObject.transform.position.y, gameObject.transform.position.z + z_move);
     }
 
     // Called When The Enemy Dies
@@ -580,7 +589,7 @@ public class Enemy_AI : MonoBehaviour
         Level_Exit lvl_exit = GameObject.FindGameObjectWithTag("Exit").GetComponent<Level_Exit>();
         lvl_exit.number_of_enemies--;
 
-        GameObject.FindGameObjectWithTag("data").GetComponent<Data>().score += points;
+        Data.game_data.score += points;
 
         Destroy(gameObject);
     }

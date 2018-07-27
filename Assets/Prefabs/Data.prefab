@@ -79,18 +79,8 @@ MonoBehaviour:
   player_bombpass: 0
   player_flamepass: 0
   saving_active: 1
-  score_name_key:
-  - name_one
-  - name_two
-  - name_three
-  - name_four
-  - name_five
-  - name_six
-  - name_seven
-  - name_eight
-  - name_nine
-  - name_ten
-  score_name_value:
+  save_pointer: 0
+  score_name:
   - 
   - 
   - 
@@ -101,17 +91,4 @@ MonoBehaviour:
   - 
   - 
   - 
-  score_number_key:
-  - score_one
-  - score_two
-  - score_three
-  - score_four
-  - score_five
-  - score_six
-  - score_seven
-  - score_eight
-  - score_nine
-  - score_ten
-  score_number_value: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
-  current_save_pointer_key: save_pointer
-  current_save_pointer_value: 0
+  score_number: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
